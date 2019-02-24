@@ -1,0 +1,7 @@
+#ifndef __PRIVATE_H__
+#define __PRIVATE_H__
+
+#define WIFI_SSID "<Your WIFI network SSID>"
+#define WIFI_PASS "<Your WIFI password>"
+
+#endif
