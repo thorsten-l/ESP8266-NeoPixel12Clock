@@ -116,29 +116,18 @@ void loop()
 {
   now = time(nullptr);
   tm *tm = localtime( &now );
-  int tenth = 0;
 
-  if( tm->tm_sec == 0 )
+  for( int i = 0; i< 20; i++ )
   {
-    for( int i = 0; i < 12; i++ )
-    {
-      setHourMinutePixel( tm );
-      pixelBuffer[i][0] = pixelBuffer[i][1] = pixelBuffer[i][2] = 128;
-      showPixels(40);
-    }
-
     setHourMinutePixel( tm );
-    pixelBuffer[0][0] = pixelBuffer[0][1] = pixelBuffer[0][2] = 128;
-    showPixels(520);
-  }
-  else
-  {
-    for( int i = 0; i< 20; i++ )
+    setPixelBase( 1200, 0, 140, ( tm->tm_sec * 20 ) + i );
+
+    if ( tm->tm_sec == 0 && i < 12 )
     {
-      setHourMinutePixel( tm );
-      setPixelBase( 1200, 0, 140, ( tm->tm_sec * 20 ) + tenth++ );
-      showPixels(50);
+      pixelBuffer[i][0] = pixelBuffer[i][1] = pixelBuffer[i][2] = 128;
     }
+
+    showPixels(50);
   }
 
   Serial.print("ctime:(UTC) ");
