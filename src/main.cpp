@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <time.h>
 #include <ESP8266WiFi.h>
+#include <Utils.hpp>
 #include <Private.h>
 #include <Adafruit_NeoPixel.h>
 
@@ -8,7 +9,7 @@
 #define NUMPIXELS 12
 
 #define APP_NAME "NeoPixel12Clock"
-#define APP_VERSION "0.1.3"
+#define APP_VERSION "0.1.5"
 #define APP_AUTHOR "Dr. Thorsten Ludewig <t.ludewig@gmail.com>"
 
 time_t now;
@@ -43,6 +44,9 @@ void showPixels( int delayInMillis )
 
 void setup()
 {
+  int bootdevice = getBootDevice();
+  pinMode( BOARD_LED_PIN, OUTPUT );
+  digitalWrite( BOARD_LED_PIN, 1 ^ BOARD_LED_ON );
   pixels.begin();
   clearPixels();
   showPixels(0);
@@ -50,8 +54,24 @@ void setup()
   delay(3000);
   Serial.println();
   Serial.println();
+  showChipInfo();
+  showFsInfo();
+  Serial.println();
+  Serial.println();
   Serial.println(F(APP_NAME ", Version " APP_VERSION ", by " APP_AUTHOR));
   Serial.println("Build date: " __DATE__ " " __TIME__);
+  Serial.print("Framework full version=" );
+  Serial.println(ESP.getFullVersion());
+  Serial.println( "PIOENV=" PIOENV ", PIOPLATFORM=" PIOPLATFORM ", PIOFRAMEWORK=" PIOFRAMEWORK );
+  Serial.printf( "boot device=%d\n", bootdevice );
+
+  if (bootdevice == 1)
+  {
+    Serial.println("\nThis sketch has just been uploaded over the UART.");
+    Serial.println("The ESP8266 will freeze on the first restart.");
+    Serial.println("Press the reset button or power cycle the ESP");
+    Serial.println("and operation will be resumed thereafter.");
+  }
 
   configTime(0, 0, "pool.ntp.org");
 
@@ -64,11 +84,14 @@ void setup()
   int i = 0;
   while((now = time(nullptr)) < 1550922262 )
   {
+    digitalWrite( BOARD_LED_PIN, 1 ^ digitalRead( BOARD_LED_PIN ));
     clearPixels();
     pixelBuffer[i++][2] = 100;
     i %= NUMPIXELS;
     showPixels(250);
   }
+
+  digitalWrite( BOARD_LED_PIN, BOARD_LED_ON );
 
   Serial.println();
   Serial.println();
