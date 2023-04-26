@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include <FS.h>
+// #include <FS.h>
 #include <Esp.h>
 #include <Utils.hpp>
 
@@ -43,27 +43,5 @@ void showChipInfo()
   else
   {
     Serial.println("Flash Chip configuration ok.\n");
-  }
-}
-
-void showFsInfo()
-{
-  if (SPIFFS.begin())
-  {
-    FSInfo fs_info;
-    SPIFFS.info(fs_info);
-
-    Serial.printf("\n--- SPIFFS Info ---\ntotal bytes = %d\n", fs_info.totalBytes);
-    Serial.printf("used bytes = %d\n", fs_info.usedBytes);
-    Serial.printf("block size = %d\n", fs_info.blockSize);
-    Serial.printf("page size = %d\n", fs_info.pageSize);
-    Serial.printf("max open files = %d\n", fs_info.maxOpenFiles);
-    Serial.printf("max path length = %d\n", fs_info.maxPathLength);
-
-    SPIFFS.end();
-  }
-  else
-  {
-    Serial.println("SPIFFS mount failed.");
   }
 }

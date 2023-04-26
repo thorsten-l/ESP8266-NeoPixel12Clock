@@ -3,6 +3,5 @@
 
 int getBootDevice();
 void showChipInfo();
-void showFsInfo();
 
 #endif
